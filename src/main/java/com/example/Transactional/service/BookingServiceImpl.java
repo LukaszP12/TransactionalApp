@@ -9,6 +9,9 @@ import com.example.Transactional.repository.PassengerInfoRepository;
 import com.example.Transactional.repository.PaymentInfoRepository;
 import com.example.Transactional.utility.PaymentGatewaySimulator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -23,6 +26,7 @@ public class BookingServiceImpl implements BookingService {
         this.passengerInfoRepository = passengerInfoRepository;
     }
 
+    @Transactional(rollbackFor = {InsufficientBalanceException.class},readOnly = false, isolation = Isolation.READ_COMMITTED, propagation = Propagation.MANDATORY)
     public BookingResponse bookTicket(BookingRequest bookingRequest) throws InsufficientBalanceException {
 
         BookingResponse bookingResponse = null;
